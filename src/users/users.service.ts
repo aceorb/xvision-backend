@@ -13,6 +13,10 @@ export class UsersService {
     return this.userRepository.findOne({ email });
   }
 
+  findById(id: string): Promise<User> {
+    return this.userRepository.findOne(id);
+  }
+
   add(name: string, email: string, password: string): Promise<User> {
     const user = new User();
     user.name = name;

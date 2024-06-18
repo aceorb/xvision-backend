@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Group } from './group.entity';
 import { Repository } from 'typeorm';
 import { User } from '../users/user.entity';
+import { GroupDto } from './dtos/group.dto';
 
 @Injectable()
 export class GroupsService {
@@ -14,6 +15,14 @@ export class GroupsService {
 
   find(): Promise<Group[]> {
     return this.groupsRepository.find();
+  }
+
+  async add(user: User, payload: GroupDto): Promise<Group> {
+    const group = new Group();
+    group.user = user;
+    group.name = payload.name;
+    group.note = payload.note;
+    return this.groupsRepository.save(group);
   }
 
   async findByUserId(userId: number): Promise<Group[]> {
