@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Device } from './device.entity';
+import { DeviceDto } from './dtos/device.dto';
 
 @Injectable()
 export class DevicesService {
@@ -28,5 +29,10 @@ export class DevicesService {
     .where('user.id = :userId', { userId })
     .where('group.id = :groupId', { groupId })
     .getMany();
+  }
+
+  async update(id: number, dto: DeviceDto): Promise<Device> {
+    const updateResult = await this.devicesRepository.update({ id }, dto);
+    return this.devicesRepository.findOne({ id });
   }
 }

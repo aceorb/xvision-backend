@@ -3,8 +3,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { DeviceStatus } from '../enums';
 
 export class DeviceDto {
-  @ApiProperty()
-  id: number;
+  @ApiProperty({ required: false })
+  id?: number;
 
   @ApiProperty()
   type: string;

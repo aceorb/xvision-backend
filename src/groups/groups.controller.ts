@@ -9,10 +9,11 @@ import { GroupDto } from './dtos/group.dto';
 export class GroupsController {
   constructor(private groupsService: GroupsService) {
   }
+
   @ApiBearerAuth()
-  @Get(':user/hello')
-  @ApiOkResponse({type: GroupDto, isArray: true})
-async groups(@Request() req): Promise<GroupDto[]> {
+  @Get()
+  @ApiOkResponse({ type: GroupDto, isArray: true })
+  async groups(@Request() req): Promise<GroupDto[]> {
     const userId = req.user.id;
     const allGroups = await this.groupsService.findByUserId(userId);
     return allGroups.map(group => group.toDto());

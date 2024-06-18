@@ -10,4 +10,5 @@ import { Group } from './group.entity';
   controllers: [GroupsController],
   imports: [TypeOrmModule.forFeature([Group, User])],
 })
-export class GroupsModule {}
+export class GroupsModule {
+}

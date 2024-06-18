@@ -11,11 +11,13 @@ export class GroupsService {
     @InjectRepository(User) private usersRepository: Repository<User>,
   ) {
   }
+
   find(): Promise<Group[]> {
     return this.groupsRepository.find();
   }
+
   async findByUserId(userId: number): Promise<Group[]> {
-    const user = await this.usersRepository.findOne({relations: ['groups'], where: {id: userId}});
+    const user = await this.usersRepository.findOne({ relations: ['groups'], where: { id: userId } });
     return user.groups;
   }
 }

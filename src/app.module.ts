@@ -8,7 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { GroupsModule } from './groups/groups.module';
 import { DevicesModule } from './devices/devices.module';
-import { OverviewModule } from './overview/overview.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { OverviewModule } from './overview/overview.module';
     TypeOrmModule.forRoot(),
     GroupsModule,
     DevicesModule,
-    OverviewModule,
+    DashboardModule
   ],
   controllers: [AppController],
   providers: [AppService],
