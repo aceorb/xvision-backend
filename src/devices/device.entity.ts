@@ -55,7 +55,6 @@ export class Device {
   group: Group;
 
 
-
   toDto(): DeviceDto {
     return {
       id: this.id,
@@ -63,10 +62,10 @@ export class Device {
       serial: this.serial,
       status: this.status,
       event: this.event,
-      last_connected: this.last_connected,
+      'last_connected': this.last_connected,
       latitude: this.latitude,
       longitude: this.longitude,
-      gps_fix: this.gps_fix,
+      'gps_fix': this.gps_fix,
       temperature: this.temperature,
       humidity: this.humidity,
       battery: this.battery,

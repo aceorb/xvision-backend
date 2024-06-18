@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-
 import { DeviceStatus } from '../enums';
+import { Group } from '../../groups/group.entity';
 
 export class DeviceDto {
   @ApiProperty({ required: false })
@@ -44,4 +44,9 @@ export class DeviceDto {
 
   @ApiProperty()
   settings: string;
+
+  @ApiProperty({ required: false })
+  groupId?: number;
+
+  group?: Group;
 }

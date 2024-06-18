@@ -32,6 +32,7 @@ export class DevicesService {
   }
 
   async update(id: number, dto: DeviceDto): Promise<Device> {
+    delete dto.groupId;
     const updateResult = await this.devicesRepository.update({ id }, dto);
     return this.devicesRepository.findOne({ id });
   }

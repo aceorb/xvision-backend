@@ -4,12 +4,16 @@ import { DeviceDto } from './dtos/device.dto';
 import { DevicesService } from './devices.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { QueryDevicesDto } from './dtos/query-devices.dto';
+import { GroupsService } from '../groups/groups.service';
 
 @Controller('devices')
 @ApiTags('devices')
 @UseGuards(JwtAuthGuard)
 export class DevicesController {
-  constructor(private devicesService: DevicesService) {
+  constructor(
+    private devicesService: DevicesService,
+    private groupsService: GroupsService,
+    ) {
   }
 
   @ApiBearerAuth()
@@ -25,6 +29,7 @@ export class DevicesController {
   @ApiBearerAuth()
   @ApiOkResponse({ type: DeviceDto })
   async update(@Param('id') id: number, @Body() body: DeviceDto): Promise<DeviceDto> {
+    body.group = await this.groupsService.findById(body.groupId);
     const updated = await this.devicesService.update(id, body);
     return updated.toDto();
   }

@@ -17,6 +17,10 @@ export class GroupsService {
     return this.groupsRepository.find();
   }
 
+  findById(id: number): Promise<Group> {
+    return this.groupsRepository.findOne(id);
+  }
+
   async add(user: User, payload: GroupDto): Promise<Group> {
     const group = new Group();
     group.user = user;
