@@ -1,6 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { DeviceStatus } from './enums';
 import { DeviceDto } from './dtos/device.dto';
+import { User } from '../users/user.entity';
+import { Group } from '../groups/group.entity';
 
 @Entity('devices')
 export class Device {
@@ -45,6 +47,14 @@ export class Device {
 
   @Column()
   settings: string;
+
+  @ManyToOne(() => User, user => user.devices)
+  user: User;
+
+  @ManyToOne(() => Group, group => group.devices)
+  group: Group;
+
+
 
   toDto(): DeviceDto {
     return {

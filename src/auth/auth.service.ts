@@ -1,6 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { compare } from 'bcrypt';
+
+import { UsersService } from '../users/users.service';
+import { User } from '../users/user.entity';
+import { TokenResponse } from './dtos/token-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -13,18 +17,28 @@ export class AuthService {
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.usersService.findOne(email);
     if (user) {
-      // TODO: compare password
+      const matched = await compare(pass, user.password);
+      if (!matched) {
+        return null;
+      }
       const { password, ...result } = user;
       return result;
     }
     return null;
   }
 
-  async login(user: any) {
+  async addUser(name: string, email: string, password: string): Promise<User> {
+    const user = await this.usersService.findOne(email);
+    if (user) {
+      throw new BadRequestException('email is already in use');
+    }
+    return this.usersService.add(name, email, password);
+  }
+
+  login(user: any): TokenResponse {
     const payload = { email: user.email, id: user.id, name: user.name };
     return {
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      access_token: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(payload),
     };
   }
 }

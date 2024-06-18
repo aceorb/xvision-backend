@@ -16,7 +16,7 @@ export class DevicesController {
   @ApiOkResponse({ type: DeviceDto, isArray: true })
   async devices(@Request() request, @Query() query: QueryDevicesDto): Promise<DeviceDto[]> {
     const userId = request.user.id;
-    const allDevices = await this.devicesService.findByUserId(userId);
+    const allDevices = await this.devicesService.findByUserId(userId, query.groupId);
     return allDevices.map(device => device.toDto());
   }
 }

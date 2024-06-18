@@ -1,5 +1,7 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Device } from '../devices/device.entity';
+import { GroupDto } from './dtos/group.dto';
+import { User } from '../users/user.entity';
 
 @Entity('groups')
 export class Group {
@@ -12,15 +14,17 @@ export class Group {
   @Column()
   note: string;
 
-  @ManyToMany(() => Device)
-  @JoinTable({
-    name: 'map_device_group',
-    joinColumns: [
-      { name: 'group_id', referencedColumnName: 'id' },
-    ],
-    inverseJoinColumns: [
-      { name: 'device_id', referencedColumnName: 'id' },
-    ],
-  })
+  @OneToMany(() => Device, device => device.group)
   devices: Device[];
+
+  @ManyToOne(() => User, user => user.groups)
+  user: User;
+
+  toDto(): GroupDto {
+    return {
+      id: this.id,
+      name: this.name,
+      note: this.note,
+    };
+  }
 }

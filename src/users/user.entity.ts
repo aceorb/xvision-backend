@@ -1,7 +1,8 @@
-import { BeforeInsert, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { hash } from 'bcrypt';
 import { Device } from '../devices/device.entity';
 import { Group } from '../groups/group.entity';
+import { UserDto } from './user.dto';
 
 @Entity('users')
 export class User {
@@ -23,41 +24,34 @@ export class User {
   @Column()
   password: string;
 
-  @Column()
+  @Column({ default: false })
   active: number;
 
-  @Column()
+  @Column({ nullable: true, default: undefined })
   address: string;
 
-  @Column()
+  @Column({ nullable: true, default: undefined })
   api_key: string;
 
-  @ManyToMany(() => Device)
-  @JoinTable({
-    name: 'map_device_user',
-    joinColumns: [
-      { name: 'user_id', referencedColumnName: 'id' },
-    ],
-    inverseJoinColumns: [
-      { name: 'device_id', referencedColumnName: 'id' },
-    ],
-  })
+  @OneToMany(() => Device, device => device.user)
   devices: Device[];
 
-  @ManyToMany(() => Group)
-  @JoinTable({
-    name: 'map_group_user',
-    joinColumns: [
-      { name: 'user_id', referencedColumnName: 'id' },
-    ],
-    inverseJoinColumns: [
-      { name: 'group_id', referencedColumnName: 'id' },
-    ],
-  })
+  @OneToMany(() => Group, group => group.user)
   groups: Group[];
 
   @BeforeInsert()
   preProcess() {
     return hash(this.password, 10).then(encrypted => this.password = encrypted);
+  }
+
+  toDto(): UserDto {
+    return {
+      id: this.id,
+      name: this.name,
+      email: this.email,
+      active: this.active,
+      address: this.address,
+      api_key: this.api_key
+    };
   }
 }

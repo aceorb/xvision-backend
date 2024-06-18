@@ -12,4 +12,12 @@ export class UsersService {
   findOne(email: string): Promise<User | undefined> {
     return this.userRepository.findOne({ email });
   }
+
+  add(name: string, email: string, password: string): Promise<User> {
+    const user = new User();
+    user.name = name;
+    user.email = email;
+    user.password = password;
+    return this.userRepository.save(user);
+  }
 }
