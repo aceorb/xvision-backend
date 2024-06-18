@@ -10,6 +10,6 @@ export class UsersService {
   ) { }
 
   findOne(email: string): Promise<User | undefined> {
-    return this.userRepository.findOne({ relations: ['devices', 'groups'], where: { email } });
+    return this.userRepository.findOne({ email });
   }
 }
