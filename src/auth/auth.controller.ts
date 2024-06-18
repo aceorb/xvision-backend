@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Request, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
@@ -7,6 +7,8 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { TokenResponse } from './dtos/token-response.dto';
 import { RegisterUserDto } from './dtos/register-user.dto';
 import { UsersService } from '../users/users.service';
+import { UserDto } from '../users/user.dto';
+import { UpdateProfileDto } from './dtos/update-profile.dto';
 
 @Controller('auth')
 @ApiTags('Authentication')
@@ -14,8 +16,8 @@ export class AuthController {
 
   constructor(
     private authService: AuthService,
-    private usersService: UsersService
-    ) {
+    private usersService: UsersService,
+  ) {
   }
 
   @UseGuards(LocalAuthGuard)
@@ -30,6 +32,15 @@ export class AuthController {
   @Get('profile')
   async getProfile(@Request() req) {
     const user = await this.usersService.findById(req.user.id);
+    return user.toDto();
+  }
+
+  @Put()
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ type: () => UserDto })
+  async updateProfile(@Request() req, @Body() body: UpdateProfileDto): Promise<UserDto> {
+    const user = await this.usersService.update(req.user.id, body);
     return user.toDto();
   }
 
