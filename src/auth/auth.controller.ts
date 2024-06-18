@@ -6,12 +6,16 @@ import { LoginDto } from './entities/login.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { TokenResponse } from './dtos/token-response.dto';
 import { RegisterUserDto } from './dtos/register-user.dto';
+import { UsersService } from '../users/users.service';
 
 @Controller('auth')
 @ApiTags('Authentication')
 export class AuthController {
 
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private usersService: UsersService
+    ) {
   }
 
   @UseGuards(LocalAuthGuard)
@@ -24,8 +28,9 @@ export class AuthController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  async getProfile(@Request() req) {
+    const user = await this.usersService.findById(req.user.id);
+    return user.toDto();
   }
 
   @Post('register')
