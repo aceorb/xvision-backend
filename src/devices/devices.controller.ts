@@ -29,7 +29,7 @@ export class DevicesController {
   @ApiBearerAuth()
   @ApiOkResponse({ type: DeviceDto })
   async update(@Param('id') id: number, @Body() body: DeviceDto): Promise<DeviceDto> {
-    body.group = await this.groupsService.findById(body.groupId);
+    body.group = await this.groupsService.findById(body.groupId || body.group.id);
     const updated = await this.devicesService.update(id, body);
     return updated.toDto();
   }

@@ -45,7 +45,7 @@ export class DeviceDto {
   @ApiProperty()
   settings: string;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({required: false})
   groupId?: number;
 
   group?: Group;
