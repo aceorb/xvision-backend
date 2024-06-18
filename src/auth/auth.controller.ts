@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, Request, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Put, Request, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
@@ -9,6 +9,9 @@ import { RegisterUserDto } from './dtos/register-user.dto';
 import { UsersService } from '../users/users.service';
 import { UserDto } from '../users/user.dto';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
+import { ChangePasswordDto } from './dtos/change-password.dto';
+import { compare } from 'bcrypt';
+import { SuccessResponseDto } from '../common/dtos/success-response.dto';
 
 @Controller('auth')
 @ApiTags('Authentication')
@@ -42,6 +45,22 @@ export class AuthController {
   async updateProfile(@Request() req, @Body() body: UpdateProfileDto): Promise<UserDto> {
     const user = await this.usersService.update(req.user.id, body);
     return user.toDto();
+  }
+
+  @Post('change-password')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ type: () => SuccessResponseDto })
+  async changePassword(@Request() req, @Body() body: ChangePasswordDto): Promise<SuccessResponseDto> {
+    const user = await this.usersService.findById(req.user.id);
+    const matched = await compare(body.oldPassword, user.password);
+    if (!matched) {
+      throw new BadRequestException('Incorrect old password');
+    }
+    user.password = body.newPassword;
+    await user.preProcess();
+    await this.usersService.updateUser(user);
+    return new SuccessResponseDto();
   }
 
   @Post('register')

@@ -30,4 +30,8 @@ export class UsersService {
     await this.userRepository.update(id, payload);
     return this.findById(id);
   }
+
+  updateUser(user: User) {
+    return this.userRepository.save(user);
+  }
 }
