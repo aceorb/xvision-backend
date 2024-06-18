@@ -25,6 +25,7 @@ export class Group {
       id: this.id,
       name: this.name,
       note: this.note,
+      devices: this.devices.map(device => device.toDto())
     };
   }
 }

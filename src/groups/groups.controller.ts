@@ -10,7 +10,8 @@ import { UsersService } from '../users/users.service';
 export class GroupsController {
   constructor(
     private groupsService: GroupsService,
-    private userService: UsersService) {
+    private userService: UsersService,
+    ) {
   }
 
   @ApiBearerAuth()
@@ -31,4 +32,5 @@ export class GroupsController {
     const added = await this.groupsService.add(user, body);
     return added.toDto();
   }
+
 }

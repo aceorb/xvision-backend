@@ -30,7 +30,10 @@ export class GroupsService {
   }
 
   async findByUserId(userId: number): Promise<Group[]> {
-    const user = await this.usersRepository.findOne({ relations: ['groups'], where: { id: userId } });
-    return user.groups;
+    return this.groupsRepository.createQueryBuilder('groups')
+      .leftJoinAndSelect('groups.user', 'user')
+      .leftJoinAndSelect('groups.devices', 'devices')
+      .where('user.id = :userId', { userId })
+      .getMany();
   }
 }
