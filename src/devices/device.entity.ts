@@ -71,6 +71,7 @@ export class Device {
       battery: this.battery,
       name: this.name,
       settings: this.settings,
+      group: this.group,
     };
   }
 }

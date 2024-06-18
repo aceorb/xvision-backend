@@ -19,6 +19,7 @@ export class DevicesService {
   async findByUserId(userId: number, groupId?: number): Promise<Device[]> {
     if (!groupId) {
       return this.devicesRepository.createQueryBuilder('devices')
+      .leftJoinAndSelect('devices.group', 'group')
       .leftJoinAndSelect('devices.user', 'user')
       .where('user.id = :userId', { userId })
       .getMany();
